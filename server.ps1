@@ -4,7 +4,8 @@ $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://localhost:$port/")
 $listener.Start()
 Write-Host "=========================================================="
-Write-Host " Urban Threads Local Server & Admin Studio Running!       "
+Write-Host " AL-NAHAL IMPEX - Export Manufacturing Server Running!    "
+Write-Host " FBR Certified Exporter and SCCI Corporate Member         "
 Write-Host " Storefront:       http://localhost:$port/                "
 Write-Host " Admin Dashboard:  http://localhost:$port/dashboard.html  "
 Write-Host "=========================================================="
@@ -97,7 +98,7 @@ try {
                         $response.OutputStream.Write($respBytes, 0, $respBytes.Length)
                         $response.OutputStream.Close()
                     } else {
-                        Send-JsonResponse $response @{ storeName = "Urban Threads" }
+                        Send-JsonResponse $response @{ storeName = "AL-NAHAL IMPEX" }
                     }
                     continue
                 } elseif ($request.HttpMethod -eq "POST") {
@@ -159,9 +160,9 @@ try {
                     $inquiries += $item
                     $jsonOut = $inquiries | ConvertTo-Json -Depth 6
                     [System.IO.File]::WriteAllText($inquiriesFile, $jsonOut, [System.Text.Encoding]::UTF8)
-                    Write-Host "[API] New inquiry forwarded to ahmadjamaltariqb@gmail.com from $($item.name) ($($item.email))"
+                    Write-Host "[API] New inquiry forwarded to ahmadjamaltariqb@gmail.com"
                 } catch {
-                    Write-Host "[API Error] $($_.Exception.Message)"
+                    Write-Host "[API Error] Inquiry parsing error"
                 }
 
                 Send-JsonResponse $response @{ success = $true; recipient = "ahmadjamaltariqb@gmail.com" }
@@ -177,10 +178,10 @@ try {
                     git add .
                     git commit -m "Admin Studio dashboard update" -ErrorAction SilentlyContinue
                     git push origin main
-                    Write-Host "[Admin Studio] Synced to GitHub & Live Site."
+                    Write-Host "[Admin Studio] Synced to GitHub and Live Site."
                     Send-JsonResponse $response @{ success = $true; message = "Pushed to GitHub successfully!" }
                 } catch {
-                    Send-JsonResponse $response @{ success = $false; message = $_.Exception.Message } 500
+                    Send-JsonResponse $response @{ success = $false; message = "GitHub push failed" } 500
                 }
                 continue
             }
