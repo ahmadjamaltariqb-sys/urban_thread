@@ -1,0 +1,44 @@
+﻿[
+    {
+        "ticket":  "#UT-INQ-6911",
+        "topic":  "Order \u0026 Delivery (yf)",
+        "name":  "yfy",
+        "email":  "ahmadjamaltariq7@gmail.com",
+        "phone":  "hfdy",
+        "order":  "yf",
+        "channel":  "Email",
+        "message":  "ddtddgfdgff",
+        "recipient":  "ahmadjamaltariqb@gmail.com",
+        "time":  "09:33 am",
+        "timestamp":  "2026-11-06T04:33:17.467Z",
+        "forwardTo":  "ahmadjamaltariqb@gmail.com"
+    },
+    {
+        "ticket":  "#UT-INQ-5635",
+        "topic":  "Order \u0026 Delivery (yf)",
+        "name":  "yfy",
+        "email":  "ahmadjamaltariq7@gmail.com",
+        "phone":  "hfdy",
+        "order":  "yf",
+        "channel":  "Email",
+        "message":  "vgvgcfrdxxrfx",
+        "recipient":  "ahmadjamaltariqb@gmail.com",
+        "time":  "10:08 am",
+        "timestamp":  "2026-11-06T05:08:41.269Z",
+        "forwardTo":  "ahmadjamaltariqb@gmail.com"
+    },
+    {
+        "ticket":  "#UT-INQ-1037",
+        "topic":  "Order \u0026 Delivery (222)",
+        "name":  "Ahmad",
+        "email":  "ahmadjamaltariq7@gmail.com",
+        "phone":  "0300786544455",
+        "order":  "222",
+        "channel":  "Email",
+        "message":  "whats the delivery time",
+        "recipient":  "ahmadjamaltariqb@gmail.com",
+        "time":  "10:10 am",
+        "timestamp":  "2026-11-06T05:10:17.159Z",
+        "forwardTo":  "ahmadjamaltariqb@gmail.com"
+    }
+]

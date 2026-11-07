@@ -1,0 +1,170 @@
+{
+  "products": [
+    {
+      "id": "p1",
+      "title": "Classic Oversized Heavyweight T-Shirt",
+      "subtitle": "Menswear • 280 GSM Organic Cotton",
+      "pricePKR": 1799,
+      "rating": "4.8 ★",
+      "badge": "MENSWEAR • NEW",
+      "badgeClass": "bg-primary text-on-primary",
+      "category": ["men", "casual", "new"],
+      "image": "images/p1_base.jpg",
+      "desc": "Menswear tailored drop-shoulder silhouette cut from 280 GSM long-staple organic cotton. Ribbed high-density crew collar that holds its architectural line wash after wash.",
+      "swatches": [
+        { "name": "Chalk White", "hex": "#f1eee7", "img": "images/p1_base.jpg" },
+        { "name": "Obsidian", "hex": "#1c1c18", "img": "images/p1_obsidian.jpg" },
+        { "name": "Olive Taupe", "hex": "#615e55", "img": "images/p1_olive.jpg" },
+        { "name": "Raw Oatmeal", "hex": "#8c7b6c", "img": "images/p1_oatmeal.jpg" }
+      ]
+    },
+    {
+      "id": "p2",
+      "title": "Premium French Terry Cotton Hoodie",
+      "subtitle": "Menswear • 420 GSM Loopback Terry",
+      "pricePKR": 3499,
+      "rating": "5.0 ★",
+      "badge": "MENSWEAR • BESTSELLER",
+      "badgeClass": "bg-primary text-on-primary",
+      "category": ["men", "casual", "new"],
+      "image": "images/p2_base.jpg",
+      "desc": "Heavy drape 420 GSM French terry men's hoodie in washed charcoal black, featuring seamless kangaroo pocket and double-lined architectural hood.",
+      "swatches": [
+        { "name": "Washed Charcoal", "hex": "#242526", "img": "images/p2_base.jpg" },
+        { "name": "Alabaster", "hex": "#d6cfc4", "img": "images/p2_alabaster.jpg" },
+        { "name": "Deep Espresso", "hex": "#403b35", "img": "images/p2_espresso.jpg" }
+      ]
+    },
+    {
+      "id": "p3",
+      "title": "Relaxed Fit Japanese Selvedge Denim",
+      "subtitle": "Menswear • 13.5 oz Shuttle Loom",
+      "pricePKR": 3999,
+      "rating": "★ 4.9 (128)",
+      "badge": "MENSWEAR • KURABO",
+      "badgeClass": "bg-surface-container-highest text-on-surface",
+      "category": ["men", "casual", "new"],
+      "image": "images/p3_base.jpg",
+      "desc": "Men's unwashed 13.5 oz red-line selvedge denim woven on vintage shuttle looms. Relaxed straight leg with custom brushed brass hardware.",
+      "swatches": [
+        { "name": "Raw Indigo", "hex": "#1b263b", "img": "images/p3_base.jpg" },
+        { "name": "Sulfur Black", "hex": "#202022", "img": "images/p3_black.jpg" }
+      ]
+    },
+    {
+      "id": "p4",
+      "title": "Textured Rib-Knit Atelier Polo Shirt",
+      "subtitle": "Menswear • Egyptian Giza Cotton Knit",
+      "pricePKR": 2499,
+      "rating": "4.7 ★",
+      "badge": "MENSWEAR • LIMITED",
+      "badgeClass": "bg-tertiary-container text-on-tertiary-container",
+      "category": ["men", "new", "sale"],
+      "image": "images/p4_base.jpg",
+      "desc": "Men's vertical-ribbed structured polo shirt knitted from extra-long-staple Giza cotton. Finished with tonal three-button placket and tailored short sleeves.",
+      "swatches": [
+        { "name": "Warm Mushroom", "hex": "#b5a8a3", "img": "images/p4_base.jpg" },
+        { "name": "Jet Black", "hex": "#141518", "img": "images/p4_black.jpg" },
+        { "name": "Dusty Sage", "hex": "#96a19d", "img": "images/p4_sage.jpg" }
+      ]
+    },
+    {
+      "id": "p5",
+      "title": "Structured Sand Belted Trench Dress",
+      "subtitle": "Womenswear • Gabardine Cotton Twill",
+      "pricePKR": 4899,
+      "rating": "4.9 ★",
+      "badge": "WOMENSWEAR • NEW",
+      "badgeClass": "bg-primary text-on-primary",
+      "category": ["women", "new"],
+      "image": "images/p5_base.jpg",
+      "desc": "Women's flowing minimalist sand-beige trench dress with defined structural lapels, storm flap, and tailored belted waist cinch.",
+      "swatches": [
+        { "name": "Sand Beige", "hex": "#d5c7b8", "img": "images/p5_base.jpg" },
+        { "name": "Obsidian", "hex": "#1c1c18", "img": "images/p5_obsidian.jpg" },
+        { "name": "Warm Ivory", "hex": "#f4f1ea", "img": "images/p5_ivory.jpg" }
+      ]
+    },
+    {
+      "id": "w2",
+      "title": "Women's Merino Ribbed Mockneck Knit",
+      "subtitle": "Womenswear • Extra Fine Australian Merino",
+      "pricePKR": 4599,
+      "rating": "5.0 ★",
+      "badge": "WOMENSWEAR • BESTSELLER",
+      "badgeClass": "bg-primary text-on-primary",
+      "category": ["women", "new"],
+      "image": "images/w2_base.jpg",
+      "desc": "Women's relaxed 7-gauge extra-fine merino wool mock-neck sweater in heather ivory with architectural fully-fashioned raglan sleeves.",
+      "swatches": [
+        { "name": "Heather Ivory", "hex": "#eae6df", "img": "images/w2_base.jpg" },
+        { "name": "Obsidian Black", "hex": "#1e1e1e", "img": "images/w2_black.jpg" },
+        { "name": "Warm Taupe", "hex": "#78716c", "img": "images/w2_taupe.jpg" }
+      ]
+    },
+    {
+      "id": "p8",
+      "title": "Women's Unlined Raw Silk Kimono Blazer",
+      "subtitle": "Womenswear • 100% Hand-Loomed Raw Silk",
+      "pricePKR": 4299,
+      "rating": "5.0 ★",
+      "badge": "WOMENSWEAR • CAPSULE",
+      "badgeClass": "bg-tertiary-container text-on-tertiary-container",
+      "category": ["women", "sale"],
+      "image": "images/p8_base.jpg",
+      "desc": "Women's unlined structured raw silk wrap jacket featuring wide architectural cuffs, clean french seams, and matte horn closure.",
+      "swatches": [
+        { "name": "Obsidian Silk", "hex": "#181818", "img": "images/p8_base.jpg" },
+        { "name": "Raw Bone", "hex": "#e2ddd5", "img": "images/p8_bone.jpg" }
+      ]
+    },
+    {
+      "id": "w4",
+      "title": "Women's Tailored Linen Lapel Coat",
+      "subtitle": "Womenswear • Heavyweight Belgian Linen",
+      "pricePKR": 5299,
+      "rating": "4.9 ★",
+      "badge": "WOMENSWEAR • ATELIER",
+      "badgeClass": "bg-surface-container-highest text-on-surface",
+      "category": ["women", "sale"],
+      "image": "images/w4_base.jpg",
+      "desc": "Women's architectural longline linen coat with hand-stitched pick-stitch lapel detailing, matte horn buttons, and fluid natural drape.",
+      "swatches": [
+        { "name": "Natural Oat", "hex": "#d8cfc2", "img": "images/w4_base.jpg" },
+        { "name": "Deep Slate", "hex": "#2b2d2f", "img": "images/w4_slate.jpg" }
+      ]
+    },
+    {
+      "id": "p6",
+      "title": "Vegetable-Tanned Full-Grain Leather Tote",
+      "subtitle": "Leather Goods • Hand-Burnished Bridle",
+      "pricePKR": 5499,
+      "rating": "5.0 ★",
+      "badge": "LEATHER GOODS",
+      "badgeClass": "bg-primary text-on-primary",
+      "category": ["accessories"],
+      "image": "images/p6_base.jpg",
+      "desc": "Architectural daily tote crafted from full-grain vegetable-tanned leather with solid brass hardware and internal laptop sleeve.",
+      "swatches": [
+        { "name": "Cognac Tan", "hex": "#8a5a36", "img": "images/p6_base.jpg" },
+        { "name": "Dark Espresso", "hex": "#3b281e", "img": "images/p6_espresso.jpg" }
+      ]
+    },
+    {
+      "id": "c1",
+      "title": "Heavyweight Loopback Crewneck Sweatshirt",
+      "subtitle": "Casual Wear • 380 GSM Combed Cotton",
+      "pricePKR": 2999,
+      "rating": "4.9 ★",
+      "badge": "ESSENTIALS",
+      "badgeClass": "bg-surface-container-highest text-on-surface",
+      "category": ["casual"],
+      "image": "images/c1_base.jpg",
+      "desc": "Heavyweight organic cotton relaxed pullover sweatshirt with chest yoke seam detailing and brushed loopback fleece interior.",
+      "swatches": [
+        { "name": "Antique Cream", "hex": "#e5ded2", "img": "images/c1_base.jpg" },
+        { "name": "Jet Black", "hex": "#141416", "img": "images/c1_obsidian.jpg" }
+      ]
+    }
+  ]
+}
