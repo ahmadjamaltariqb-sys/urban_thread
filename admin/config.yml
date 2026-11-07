@@ -14,17 +14,22 @@ collections:
       - name: "products_data"
         label: "All Products"
         file: "data/products.json"
+        format: "json"
         description: "Manage catalog products, prices, images, descriptions, and color swatches"
         fields:
           - label: "Products"
             name: "products"
             widget: "list"
+            summary: "{{fields.title}} (Rs. {{fields.pricePKR}})"
             fields:
               - { label: "Product ID (e.g. p1, p2)", name: "id", widget: "string" }
               - { label: "Title", name: "title", widget: "string" }
-              - { label: "Subtitle", name: "subtitle", widget: "string" }
-              - { label: "Price / Value", name: "pricePKR", widget: "number", value_type: "int" }
-              - { label: "Rating / Certification", name: "rating", widget: "string" }
+              - { label: "Subtitle", name: "subtitle", widget: "string", required: false }
+              - { label: "Price USD ($)", name: "priceUSD", widget: "number", value_type: "float", required: false }
+              - { label: "Price PKR (Rs.)", name: "pricePKR", widget: "number", value_type: "int" }
+              - { label: "MOQ (Minimum Order)", name: "moq", widget: "string", required: false }
+              - { label: "Lead Time", name: "leadTime", widget: "string", required: false }
+              - { label: "Rating / Certification", name: "rating", widget: "string", required: false }
               - { label: "Badge Text", name: "badge", widget: "string", required: false }
               - { label: "Badge CSS Class", name: "badgeClass", widget: "string", required: false }
               - label: "Categories"
@@ -38,6 +43,7 @@ collections:
                 name: "swatches"
                 widget: "list"
                 required: false
+                summary: "{{fields.name}}"
                 fields:
                   - { label: "Color Name", name: "name", widget: "string" }
                   - { label: "Color Hex (#hex)", name: "hex", widget: "string" }
@@ -46,13 +52,16 @@ collections:
       - name: "store_settings"
         label: "Company Branding & Settings"
         file: "data/settings.json"
+        format: "json"
         description: "Manage company name, export announcement bar, WhatsApp number, and details"
         fields:
           - { label: "Company Name", name: "storeName", widget: "string" }
-          - { label: "Tagline / Certifications", name: "storeTagline", widget: "string" }
-          - { label: "Top Announcement Bar Text", name: "announcementText", widget: "text" }
-          - { label: "WhatsApp Support Number", name: "whatsappNumber", widget: "string" }
-          - { label: "Inquiries Email", name: "contactEmail", widget: "string" }
-          - { label: "Factory / Office Address", name: "address", widget: "string" }
-          - { label: "Hero Headline", name: "heroHeadline", widget: "string" }
-          - { label: "Hero Subtitle", name: "heroSubtitle", widget: "text" }
+          - { label: "Tagline / Certifications", name: "storeTagline", widget: "string", required: false }
+          - { label: "Top Announcement Bar Text", name: "announcementText", widget: "text", required: false }
+          - { label: "WhatsApp Support Number", name: "whatsappNumber", widget: "string", required: false }
+          - { label: "Inquiries Email", name: "contactEmail", widget: "string", required: false }
+          - { label: "Factory / Office Address", name: "address", widget: "string", required: false }
+          - { label: "Hero Headline", name: "heroHeadline", widget: "string", required: false }
+          - { label: "Hero Subtitle", name: "heroSubtitle", widget: "text", required: false }
+          - { label: "Currency Code", name: "currency", widget: "string", required: false }
+          - { label: "Currency Symbol", name: "currencySymbol", widget: "string", required: false }
