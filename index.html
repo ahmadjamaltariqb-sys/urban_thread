@@ -2333,7 +2333,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderContactHistory();
 });
 
-// Netlify Identity Login Redirect
+// Netlify Identity Login Redirect & Auto-Open on Token
 if (window.netlifyIdentity) {
   window.netlifyIdentity.on("init", user => {
     if (!user) {
@@ -2342,6 +2342,9 @@ if (window.netlifyIdentity) {
       });
     }
   });
+  if (window.location.hash && window.location.hash.includes('_token=')) {
+    window.netlifyIdentity.open();
+  }
 }
 </script>
 </body></html>
