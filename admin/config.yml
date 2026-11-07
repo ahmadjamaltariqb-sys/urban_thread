@@ -1,0 +1,43 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Media files stored in the repository
+media_folder: "images"
+public_folder: "images"
+
+collections:
+  - name: "catalog"
+    label: "Store Catalog"
+    files:
+      - name: "products_data"
+        label: "All Products"
+        file: "data/products.json"
+        description: "Manage products, pricing, descriptions, and color swatches"
+        fields:
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            fields:
+              - { label: "Product ID (e.g. p1, p2)", name: "id", widget: "string" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Subtitle", name: "subtitle", widget: "string" }
+              - { label: "Price (PKR)", name: "pricePKR", widget: "number", value_type: "int" }
+              - { label: "Rating", name: "rating", widget: "string" }
+              - { label: "Badge Text", name: "badge", widget: "string", required: false }
+              - { label: "Badge CSS Class", name: "badgeClass", widget: "string", required: false }
+              - label: "Categories"
+                name: "category"
+                widget: "select"
+                multiple: true
+                options: ["men", "women", "casual", "accessories", "sale", "new"]
+              - { label: "Main Image", name: "image", widget: "image" }
+              - { label: "Description", name: "desc", widget: "text" }
+              - label: "Color Swatches"
+                name: "swatches"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Color Name", name: "name", widget: "string" }
+                  - { label: "Color Hex (#hex)", name: "hex", widget: "string" }
+                  - { label: "Color Image", name: "img", widget: "image" }
