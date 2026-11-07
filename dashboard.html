@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urban Threads — Atelier Admin Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Bodoni Moda"', 'serif']
+          },
+          colors: {
+            atelier: {
+              900: '#141412',
+              800: '#1f1e1a',
+              700: '#2d2b25',
+              600: '#48453c',
+              500: '#6d695c',
+              200: '#ded8cb',
+              100: '#f1ede4',
+              50: '#faf8f5'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { background-color: #faf8f5; color: #1c1c18; }
+    .tab-btn.active {
+      border-bottom: 2px solid #141412;
+      color: #141412;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col bg-atelier-50">
+
+  <!-- HEADER -->
+  <header class="bg-atelier-900 text-white sticky top-0 z-40 border-b border-atelier-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-white text-black flex items-center justify-center font-bold text-xs tracking-wider">
+          UT
+        </div>
+        <div>
+          <h1 class="font-serif text-lg tracking-wider uppercase leading-none">Urban Threads</h1>
+          <p class="text-[10px] tracking-widest text-atelier-200 uppercase mt-0.5">Admin Management Studio</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Local Studio Active
+        </span>
+
+        <a href="/index.html" target="_blank" class="text-xs uppercase tracking-wider px-3 py-1.5 bg-atelier-800 hover:bg-atelier-700 text-white border border-atelier-600 transition flex items-center gap-1.5">
+          <span>Open Storefront</span>
+          <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+        </a>
+
+        <button onclick="syncToGitHub()" id="btn-sync" class="text-xs uppercase tracking-wider font-semibold px-4 py-1.5 bg-white text-black hover:bg-atelier-100 transition shadow flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">cloud_upload</span>
+          <span>Sync to Live Site</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- TABS NAVIGATION -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-8 text-sm border-t border-atelier-800">
+      <button onclick="switchTab('products')" id="tab-btn-products" class="tab-btn active py-3 text-white border-b-2 border-white transition flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+        Products Catalog (<span id="stat-products-count">0</span>)
+      </button>
+      <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn py-3 text-atelier-200 hover:text-white border-b-2 border-transparent transition flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">tune</span>
+        Store Branding &amp; Settings
+      </button>
+      <button onclick="switchTab('inquiries')" id="tab-btn-inquiries" class="tab-btn py-3 text-atelier-200 hover:text-white border-b-2 border-transparent transition flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">mail</span>
+        Customer Messages (<span id="stat-inquiries-count">0</span>)
+      </button>
+      <button onclick="switchTab('deploy')" id="tab-btn-deploy" class="tab-btn py-3 text-atelier-200 hover:text-white border-b-2 border-transparent transition flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+        Deploy &amp; Live Controls
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-black text-white px-5 py-3 rounded shadow-2xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+      <span class="material-symbols-outlined text-emerald-400" id="toast-icon">check_circle</span>
+      <span id="toast-msg" class="text-sm">Action successful!</span>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- TAB 1: PRODUCTS CATALOG -->
+    <!-- ============================================================== -->
+    <section id="tab-products" class="tab-content block">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <h2 class="font-serif text-2xl font-bold text-atelier-900">Products Catalog</h2>
+          <p class="text-sm text-atelier-500">Edit titles, prices (PKR), categories, badges, and images in real-time.</p>
+        </div>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <input type="text" id="search-input" oninput="filterProductsTable()" placeholder="Search title or ID..." class="px-3 py-2 text-sm border border-atelier-200 bg-white focus:outline-none focus:border-black flex-1 sm:w-64" />
+          <button onclick="openProductModal()" class="px-4 py-2 bg-atelier-900 text-white hover:bg-black text-sm uppercase tracking-wider font-semibold transition flex items-center gap-2 shrink-0">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            Add Product
+          </button>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="products-container">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 2: STORE SETTINGS -->
+    <!-- ============================================================== -->
+    <section id="tab-settings" class="tab-content hidden">
+      <div class="max-w-3xl bg-white border border-atelier-200 shadow-sm p-6 sm:p-8">
+        <h2 class="font-serif text-2xl font-bold text-atelier-900 mb-2">Store Branding &amp; Configuration</h2>
+        <p class="text-sm text-atelier-500 mb-8">Update store name, top announcement ticker, contact numbers, and atelier details.</p>
+
+        <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Store Name</label>
+              <input type="text" id="cfg-storeName" required class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Atelier Subtitle / City</label>
+              <input type="text" id="cfg-storeTagline" required class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Top Bar Announcement Banner</label>
+            <textarea id="cfg-announcementText" rows="2" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black"></textarea>
+            <p class="text-xs text-atelier-500 mt-1">Shown in the top black ticker across the entire website.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">WhatsApp Customer Support Number</label>
+              <input type="text" id="cfg-whatsappNumber" placeholder="+92 300 1234567" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Admin Notification Email</label>
+              <input type="email" id="cfg-contactEmail" required class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Atelier Physical Address</label>
+              <input type="text" id="cfg-address" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+            </div>
+            <div>
+              <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Free Shipping Threshold (PKR)</label>
+              <input type="number" id="cfg-freeShippingMinOrder" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Hero Section Headline</label>
+            <input type="text" id="cfg-heroHeadline" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+          </div>
+
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Hero Section Subtitle</label>
+            <textarea id="cfg-heroSubtitle" rows="2" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black"></textarea>
+          </div>
+
+          <div class="pt-4 border-t border-atelier-100 flex justify-end">
+            <button type="submit" class="px-6 py-2.5 bg-black text-white hover:bg-atelier-800 text-sm uppercase tracking-wider font-semibold transition flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">save</span>
+              Save Store Settings
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 3: CUSTOMER INQUIRIES -->
+    <!-- ============================================================== -->
+    <section id="tab-inquiries" class="tab-content hidden">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h2 class="font-serif text-2xl font-bold text-atelier-900">Customer Messages</h2>
+          <p class="text-sm text-atelier-500">Inquiries submitted through the Contact Us section on your website.</p>
+        </div>
+        <button onclick="loadInquiries()" class="px-3 py-1.5 text-xs uppercase border border-atelier-200 bg-white hover:bg-atelier-100 transition flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">refresh</span>
+          Refresh Messages
+        </button>
+      </div>
+
+      <div class="bg-white border border-atelier-200 shadow-sm overflow-hidden">
+        <div id="inquiries-list" class="divide-y divide-atelier-100">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- TAB 4: DEPLOY & LIVE CONTROLS -->
+    <!-- ============================================================== -->
+    <section id="tab-deploy" class="tab-content hidden">
+      <div class="max-w-3xl space-y-6">
+        <div class="bg-white border border-atelier-200 shadow-sm p-6 sm:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[24px]">cloud_sync</span>
+            </div>
+            <div>
+              <h2 class="font-serif text-2xl font-bold text-atelier-900">1-Click Live Sync</h2>
+              <p class="text-sm text-atelier-500">Push all local changes to GitHub &amp; Netlify with one click.</p>
+            </div>
+          </div>
+
+          <p class="text-sm text-atelier-600 mb-6">
+            Jab bhi aap is dashboard se koi naya product add karein, price badlein, ya settings update karein, wo foran aapke computer par save ho jata hai. Live website par bhejne ke liye sirf neechay diya gaya button dabayein:
+          </p>
+
+          <button onclick="syncToGitHub()" class="w-full sm:w-auto px-6 py-3 bg-black hover:bg-atelier-800 text-white font-semibold text-sm uppercase tracking-wider transition flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">cloud_upload</span>
+            Push All Changes to Live Website
+          </button>
+        </div>
+
+        <div class="bg-white border border-atelier-200 shadow-sm p-6 sm:p-8">
+          <h3 class="font-bold text-sm uppercase tracking-wider text-atelier-900 mb-3">Live Deployment Links</h3>
+          <ul class="space-y-3 text-sm">
+            <li class="flex items-center justify-between p-3 bg-atelier-50 border border-atelier-100">
+              <span class="font-medium">GitHub Repository</span>
+              <a href="https://github.com/ahmadjamaltariqb-sys/urban_thread" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1 font-mono text-xs">
+                <span>ahmadjamaltariqb-sys/urban_thread</span>
+                <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+              </a>
+            </li>
+            <li class="flex items-center justify-between p-3 bg-atelier-50 border border-atelier-100">
+              <span class="font-medium">Decap CMS Production Path</span>
+              <span class="font-mono text-xs text-atelier-600">https://your-site.netlify.app/admin/</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: ADD / EDIT PRODUCT -->
+  <!-- ============================================================== -->
+  <div id="product-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-atelier-200 shadow-2xl p-6 sm:p-8">
+      <div class="flex justify-between items-center pb-4 border-b border-atelier-100 mb-6">
+        <div>
+          <h3 class="font-serif text-xl font-bold text-atelier-900" id="modal-title">Edit Product</h3>
+          <p class="text-xs text-atelier-500">Configure product specifications, pricing and media.</p>
+        </div>
+        <button onclick="closeProductModal()" class="text-atelier-400 hover:text-black">
+          <span class="material-symbols-outlined text-[24px]">close</span>
+        </button>
+      </div>
+
+      <form id="product-form" onsubmit="saveProduct(event)" class="space-y-5">
+        <input type="hidden" id="prod-original-id" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Product ID (Unique, e.g. p1, p9)</label>
+            <input type="text" id="prod-id" required class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black font-mono" />
+          </div>
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Price in PKR (e.g. 2499)</label>
+            <input type="number" id="prod-price" required class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Product Title</label>
+          <input type="text" id="prod-title" required class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Subtitle / Material Details</label>
+          <input type="text" id="prod-subtitle" placeholder="Menswear • 280 GSM Cotton" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Rating Display</label>
+            <input type="text" id="prod-rating" placeholder="4.9 ★" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+          </div>
+          <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Badge (e.g. BESTSELLER, NEW)</label>
+            <input type="text" id="prod-badge" placeholder="NEW ARRIVAL" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Categories (Check all that apply)</label>
+          <div class="flex flex-wrap gap-4 text-sm mt-1">
+            <label class="flex items-center gap-1.5"><input type="checkbox" name="cat" value="men" class="rounded"> Men</label>
+            <label class="flex items-center gap-1.5"><input type="checkbox" name="cat" value="women" class="rounded"> Women</label>
+            <label class="flex items-center gap-1.5"><input type="checkbox" name="cat" value="casual" class="rounded"> Casual</label>
+            <label class="flex items-center gap-1.5"><input type="checkbox" name="cat" value="accessories" class="rounded"> Accessories</label>
+            <label class="flex items-center gap-1.5"><input type="checkbox" name="cat" value="new" class="rounded"> New</label>
+            <label class="flex items-center gap-1.5"><input type="checkbox" name="cat" value="sale" class="rounded text-red-600"> Sale</label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Main Image Path (e.g. images/p1_base.jpg)</label>
+          <input type="text" id="prod-image" required class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black" />
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-wider font-bold text-atelier-600 mb-1">Description</label>
+          <textarea id="prod-desc" rows="3" class="w-full px-3 py-2 text-sm border border-atelier-200 focus:outline-none focus:border-black"></textarea>
+        </div>
+
+        <div class="pt-4 border-t border-atelier-100 flex justify-between items-center">
+          <button type="button" onclick="deleteCurrentProduct()" id="btn-delete-prod" class="text-xs uppercase tracking-wider text-red-600 hover:text-red-800 font-bold hidden">
+            Delete Product
+          </button>
+          <div class="flex gap-3 ml-auto">
+            <button type="button" onclick="closeProductModal()" class="px-4 py-2 border border-atelier-200 text-sm uppercase tracking-wider font-semibold">
+              Cancel
+            </button>
+            <button type="submit" class="px-6 py-2 bg-black text-white hover:bg-atelier-800 text-sm uppercase tracking-wider font-semibold transition">
+              Save Product
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    let products = [];
+    let settings = {};
+    let inquiries = [];
+
+    // Switch Tabs
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('active', 'border-white', 'text-white');
+        el.classList.add('border-transparent', 'text-atelier-200');
+      });
+
+      const target = document.getElementById(`tab-${tabId}`);
+      const btn = document.getElementById(`tab-btn-${tabId}`);
+      if (target) target.classList.remove('hidden');
+      if (btn) {
+        btn.classList.add('active', 'border-white', 'text-white');
+        btn.classList.remove('border-transparent', 'text-atelier-200');
+      }
+    }
+
+    // Show Toast
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+      toastMsg.textContent = msg;
+      toastIcon.textContent = isSuccess ? 'check_circle' : 'error';
+      toastIcon.className = `material-symbols-outlined ${isSuccess ? 'text-emerald-400' : 'text-red-400'}`;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    // Load Data
+    async function loadAllData() {
+      try {
+        // Products
+        const prodRes = await fetch('/api/products?v=' + Date.now());
+        if (prodRes.ok) {
+          const pData = await prodRes.json();
+          products = pData.products || [];
+          renderProductsGrid(products);
+          document.getElementById('stat-products-count').textContent = products.length;
+        }
+
+        // Settings
+        const setRes = await fetch('/api/settings?v=' + Date.now());
+        if (setRes.ok) {
+          settings = await setRes.json();
+          populateSettingsForm(settings);
+        }
+
+        // Inquiries
+        loadInquiries();
+      } catch (err) {
+        console.error('Data load error:', err);
+      }
+    }
+
+    // Render Products Grid
+    function renderProductsGrid(list) {
+      const container = document.getElementById('products-container');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<div class="col-span-full py-12 text-center text-atelier-500">No products found.</div>';
+        return;
+      }
+
+      container.innerHTML = list.map(p => `
+        <div class="bg-white border border-atelier-200 shadow-sm flex flex-col group hover:border-black transition">
+          <div class="relative aspect-[3/4] bg-atelier-100 overflow-hidden">
+            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x800?text=Atelier+Garment'" />
+            <div class="absolute top-2 left-2 flex flex-col gap-1">
+              ${p.badge ? `<span class="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-black text-white">${p.badge}</span>` : ''}
+              <span class="px-2 py-0.5 text-[9px] font-mono uppercase tracking-wider bg-white/90 text-black">${p.id}</span>
+            </div>
+            <div class="absolute top-2 right-2">
+              <span class="px-2 py-0.5 text-[10px] font-bold bg-white/90 text-black">${p.rating || '4.9 ★'}</span>
+            </div>
+          </div>
+
+          <div class="p-4 flex flex-col flex-1">
+            <div class="flex justify-between items-start gap-2 mb-1">
+              <h3 class="font-serif font-bold text-base text-atelier-900 leading-snug">${p.title}</h3>
+              <span class="font-bold text-base text-atelier-900 shrink-0">Rs. ${Number(p.pricePKR).toLocaleString()}</span>
+            </div>
+            <p class="text-xs text-atelier-500 mb-3">${p.subtitle || ''}</p>
+            
+            <div class="flex flex-wrap gap-1 mb-4">
+              ${(p.category || []).map(c => `<span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 bg-atelier-50 text-atelier-600 border border-atelier-200">${c}</span>`).join('')}
+            </div>
+
+            <div class="mt-auto pt-3 border-t border-atelier-100 flex items-center justify-between gap-2">
+              <button onclick="editProduct('${p.id}')" class="flex-1 py-1.5 text-xs uppercase tracking-wider font-bold bg-atelier-900 hover:bg-black text-white transition flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">edit</span> Edit Details
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Filter Products
+    function filterProductsTable() {
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
+      const filtered = products.filter(p => p.title.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || (p.subtitle && p.subtitle.toLowerCase().includes(q)));
+      renderProductsGrid(filtered);
+    }
+
+    // Modal controls
+    function openProductModal(prod = null) {
+      const modal = document.getElementById('product-modal');
+      const delBtn = document.getElementById('btn-delete-prod');
+      document.getElementById('product-form').reset();
+      
+      document.querySelectorAll('input[name="cat"]').forEach(cb => cb.checked = false);
+
+      if (prod) {
+        document.getElementById('modal-title').textContent = 'Edit Product — ' + prod.id;
+        document.getElementById('prod-original-id').value = prod.id;
+        document.getElementById('prod-id').value = prod.id;
+        document.getElementById('prod-title').value = prod.title || '';
+        document.getElementById('prod-subtitle').value = prod.subtitle || '';
+        document.getElementById('prod-price').value = prod.pricePKR || 0;
+        document.getElementById('prod-rating').value = prod.rating || '4.9 ★';
+        document.getElementById('prod-badge').value = prod.badge || '';
+        document.getElementById('prod-image').value = prod.image || '';
+        document.getElementById('prod-desc').value = prod.desc || '';
+        
+        (prod.category || []).forEach(c => {
+          const cb = document.querySelector(`input[name="cat"][value="${c}"]`);
+          if (cb) cb.checked = true;
+        });
+
+        delBtn.classList.remove('hidden');
+      } else {
+        document.getElementById('modal-title').textContent = 'Add New Product';
+        document.getElementById('prod-original-id').value = '';
+        document.getElementById('prod-id').value = 'p' + (products.length + 1);
+        delBtn.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+    }
+
+    function editProduct(id) {
+      const p = products.find(item => item.id === id);
+      if (p) openProductModal(p);
+    }
+
+    // Save Product
+    async function saveProduct(e) {
+      e.preventDefault();
+      const origId = document.getElementById('prod-original-id').value;
+      const newId = document.getElementById('prod-id').value.trim();
+
+      const selectedCats = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(cb => cb.value);
+
+      const prodData = {
+        id: newId,
+        title: document.getElementById('prod-title').value.trim(),
+        subtitle: document.getElementById('prod-subtitle').value.trim(),
+        pricePKR: Number(document.getElementById('prod-price').value),
+        rating: document.getElementById('prod-rating').value.trim() || '4.9 ★',
+        badge: document.getElementById('prod-badge').value.trim(),
+        category: selectedCats.length > 0 ? selectedCats : ['men'],
+        image: document.getElementById('prod-image').value.trim(),
+        desc: document.getElementById('prod-desc').value.trim(),
+        swatches: []
+      };
+
+      // Keep swatches if already present
+      const existing = products.find(p => p.id === origId);
+      if (existing && existing.swatches) {
+        prodData.swatches = existing.swatches;
+      } else {
+        prodData.swatches = [
+          { name: 'Base Edition', hex: '#1c1c18', img: prodData.image }
+        ];
+      }
+
+      if (origId) {
+        const idx = products.findIndex(p => p.id === origId);
+        if (idx !== -1) products[idx] = prodData;
+      } else {
+        products.push(prodData);
+      }
+
+      // Save to server
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ products })
+      });
+
+      if (res.ok) {
+        closeProductModal();
+        renderProductsGrid(products);
+        document.getElementById('stat-products-count').textContent = products.length;
+        showToast('Product successfully saved!');
+      } else {
+        showToast('Error saving product', false);
+      }
+    }
+
+    // Delete Product
+    async function deleteCurrentProduct() {
+      const origId = document.getElementById('prod-original-id').value;
+      if (!origId) return;
+
+      if (!confirm(`Are you sure you want to delete product "${origId}"?`)) return;
+
+      products = products.filter(p => p.id !== origId);
+
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ products })
+      });
+
+      if (res.ok) {
+        closeProductModal();
+        renderProductsGrid(products);
+        document.getElementById('stat-products-count').textContent = products.length;
+        showToast('Product deleted.');
+      }
+    }
+
+    // Populate Settings
+    function populateSettingsForm(cfg) {
+      document.getElementById('cfg-storeName').value = cfg.storeName || '';
+      document.getElementById('cfg-storeTagline').value = cfg.storeTagline || '';
+      document.getElementById('cfg-announcementText').value = cfg.announcementText || '';
+      document.getElementById('cfg-whatsappNumber').value = cfg.whatsappNumber || '';
+      document.getElementById('cfg-contactEmail').value = cfg.contactEmail || '';
+      document.getElementById('cfg-address').value = cfg.address || '';
+      document.getElementById('cfg-freeShippingMinOrder').value = cfg.freeShippingMinOrder || 5000;
+      document.getElementById('cfg-heroHeadline').value = cfg.heroHeadline || '';
+      document.getElementById('cfg-heroSubtitle').value = cfg.heroSubtitle || '';
+    }
+
+    // Save Settings
+    async function saveSettings(e) {
+      e.preventDefault();
+      const updated = {
+        storeName: document.getElementById('cfg-storeName').value.trim(),
+        storeTagline: document.getElementById('cfg-storeTagline').value.trim(),
+        announcementText: document.getElementById('cfg-announcementText').value.trim(),
+        whatsappNumber: document.getElementById('cfg-whatsappNumber').value.trim(),
+        contactEmail: document.getElementById('cfg-contactEmail').value.trim(),
+        address: document.getElementById('cfg-address').value.trim(),
+        freeShippingMinOrder: Number(document.getElementById('cfg-freeShippingMinOrder').value),
+        heroHeadline: document.getElementById('cfg-heroHeadline').value.trim(),
+        heroSubtitle: document.getElementById('cfg-heroSubtitle').value.trim(),
+        currency: 'PKR',
+        currencySymbol: 'Rs.'
+      };
+
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updated)
+      });
+
+      if (res.ok) {
+        settings = updated;
+        showToast('Store settings updated!');
+      } else {
+        showToast('Error saving settings', false);
+      }
+    }
+
+    // Load Inquiries
+    async function loadInquiries() {
+      try {
+        const res = await fetch('/api/inquiries?v=' + Date.now());
+        if (res.ok) {
+          inquiries = await res.json();
+          if (!Array.isArray(inquiries)) inquiries = inquiries ? [inquiries] : [];
+          document.getElementById('stat-inquiries-count').textContent = inquiries.length;
+          renderInquiriesList(inquiries);
+        }
+      } catch (e) {
+        console.warn('Inquiries load error:', e);
+      }
+    }
+
+    function renderInquiriesList(list) {
+      const container = document.getElementById('inquiries-list');
+      if (!list || list.length === 0) {
+        container.innerHTML = '<div class="p-8 text-center text-atelier-500">No customer messages received yet.</div>';
+        return;
+      }
+
+      container.innerHTML = list.slice().reverse().map(item => `
+        <div class="p-5 hover:bg-atelier-50 transition">
+          <div class="flex justify-between items-start gap-4 mb-2">
+            <div>
+              <h4 class="font-bold text-sm text-atelier-900">${item.name || 'Anonymous Guest'}</h4>
+              <p class="text-xs text-atelier-500">${item.email || ''} • ${item.phone || 'No phone'}</p>
+            </div>
+            <span class="text-[10px] font-mono text-atelier-500 bg-atelier-100 px-2 py-0.5 rounded">${item.date || 'Recent'}</span>
+          </div>
+          <p class="text-xs text-atelier-700 bg-white p-3 border border-atelier-100 mt-2">${item.message || 'No message content'}</p>
+        </div>
+      `).join('');
+    }
+
+    // Sync to GitHub / Live
+    async function syncToGitHub() {
+      const btn = document.getElementById('btn-sync');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span><span>Syncing...</span>';
+
+      try {
+        const res = await fetch('/api/sync-github', { method: 'POST' });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          showToast('Changes pushed to GitHub & Live Website successfully!');
+        } else {
+          showToast(result.message || 'Push completed with notice.', true);
+        }
+      } catch (err) {
+        showToast('Sync completed locally. Check connection.', true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">cloud_upload</span><span>Sync to Live Site</span>';
+      }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', loadAllData);
+  </script>
+</body>
+</html>

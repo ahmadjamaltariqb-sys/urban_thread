@@ -5,7 +5,7 @@
 <!-- HEADER -->
 <header class="fixed top-0 left-0 w-full z-40 bg-surface/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
   <div class="bg-primary text-on-primary py-2 px-margin-mobile md:px-margin text-center overflow-hidden flex items-center justify-center gap-4">
-    <p class="font-label-sm text-label-sm tracking-[0.2em] uppercase truncate">NEW SEASON COLLECTION — SHOP NOW • FREE NATIONWIDE SHIPPING ON ORDERS OVER RS. 5,000 • 30-DAY HASSLE-FREE RETURNS</p>
+    <p class="font-label-sm text-label-sm tracking-[0.2em] uppercase truncate" id="top-announcement-text">NEW SEASON COLLECTION — SHOP NOW • FREE NATIONWIDE SHIPPING ON ORDERS OVER RS. 5,000 • 30-DAY HASSLE-FREE RETURNS</p>
     <button onclick="filterAndScroll('new')" class="hidden sm:inline-block font-label-sm text-label-sm uppercase underline tracking-widest text-on-primary/90 hover:text-on-primary shrink-0">Shop Drop →</button>
   </div>
   <div class="h-20 w-full px-margin-mobile md:px-margin flex items-center justify-between gap-6">
@@ -22,8 +22,8 @@
           </svg>
         </div>
         <div class="flex flex-col">
-          <span class="font-headline-sm text-[20px] leading-none tracking-[0.08em] uppercase text-on-surface group-hover:text-secondary transition-colors">Urban Threads</span>
-          <span class="font-label-sm text-[8px] tracking-[0.28em] uppercase text-secondary mt-0.5">Lahore Atelier</span>
+          <span class="font-headline-sm text-[20px] leading-none tracking-[0.08em] uppercase text-on-surface group-hover:text-secondary transition-colors" id="brand-name-display">Urban Threads</span>
+          <span class="font-label-sm text-[8px] tracking-[0.28em] uppercase text-secondary mt-0.5" id="brand-tagline-display">Lahore Atelier</span>
         </div>
       </a>
     </div>
@@ -1333,6 +1333,32 @@ async function loadCmsProducts() {
   }
 }
 loadCmsProducts();
+
+// Dynamic Store Settings loader
+async function loadStoreSettings() {
+  try {
+    const res = await fetch('data/settings.json?v=' + Date.now());
+    if (res.ok) {
+      const cfg = await res.json();
+      if (cfg.storeName) {
+        const brandEls = document.querySelectorAll('#brand-name-display');
+        brandEls.forEach(el => el.textContent = cfg.storeName);
+        document.title = cfg.storeName + ' — ' + (cfg.storeTagline || 'Atelier & Ready-to-Wear');
+      }
+      if (cfg.storeTagline) {
+        const tagEls = document.querySelectorAll('#brand-tagline-display');
+        tagEls.forEach(el => el.textContent = cfg.storeTagline);
+      }
+      if (cfg.announcementText) {
+        const annEl = document.getElementById('top-announcement-text');
+        if (annEl) annEl.textContent = cfg.announcementText;
+      }
+    }
+  } catch (err) {
+    console.log('Using default store settings');
+  }
+}
+loadStoreSettings();
 
 // State
 let currentCurrency = { code: 'PKR', symbol: 'Rs.', rate: 1 };
