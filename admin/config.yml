@@ -3,7 +3,7 @@ backend:
   repo: ahmadjamaltariqb-sys/urban_thread
   branch: main
 
-# Media folder for uploaded product images
+# Media folder where uploaded product images will be stored
 media_folder: "images"
 public_folder: "images"
 
@@ -37,7 +37,10 @@ collections:
                 widget: "select"
                 multiple: true
                 options: ["men", "women", "casual", "accessories", "sale", "new", "export", "oem"]
-              - { label: "Main Image", name: "image", widget: "image" }
+              - label: "Main Image"
+                name: "image"
+                widget: "image"
+                choose_url: true
               - { label: "Description", name: "desc", widget: "text" }
               - label: "Color Swatches"
                 name: "swatches"
@@ -47,7 +50,11 @@ collections:
                 fields:
                   - { label: "Color Name", name: "name", widget: "string" }
                   - { label: "Color Hex (#hex)", name: "hex", widget: "string" }
-                  - { label: "Color Image", name: "img", widget: "image" }
+                  - label: "Color Image"
+                    name: "img"
+                    widget: "image"
+                    choose_url: true
+                    required: false
 
       - name: "store_settings"
         label: "Company Branding & Settings"
