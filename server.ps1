@@ -1,4 +1,4 @@
-$port = 8080
+﻿$port = 8080
 $root = "C:\Users\AHMED\.gemini\antigravity\scratch\stitch_urban_threads_fashion_store"
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://localhost:$port/")
@@ -172,6 +172,40 @@ try {
             # ----------------------------------------------------
             # API: POST 1-Click Sync to GitHub
             # ----------------------------------------------------
+                        # ----------------------------------------------------
+            # API: POST Save All Live Edits to index.html & files
+            # ----------------------------------------------------
+            if ($localPath -eq "api/save-all-live") {
+                try {
+                    $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                    $bodyText = $reader.ReadToEnd()
+                    $reader.Close()
+
+                    $payload = $bodyText | ConvertFrom-Json
+                    if ($payload.html) {
+                        $indexPath = Join-Path $root "index.html"
+                        $codePath = Join-Path $root "code.html"
+                        [System.IO.File]::WriteAllText($indexPath, $payload.html, [System.Text.Encoding]::UTF8)
+                        [System.IO.File]::WriteAllText($codePath, $payload.html, [System.Text.Encoding]::UTF8)
+                        Write-Host "[Admin Studio] index.html & code.html saved live to disk!"
+                    }
+                    if ($payload.products) {
+                        $prodFile = Join-Path $root "data\products.json"
+                        $prodJson = $payload.products | ConvertTo-Json -Depth 10
+                        [System.IO.File]::WriteAllText($prodFile, $prodJson, [System.Text.Encoding]::UTF8)
+                    }
+                    if ($payload.settings) {
+                        $setFile = Join-Path $root "data\settings.json"
+                        $setJson = $payload.settings | ConvertTo-Json -Depth 10
+                        [System.IO.File]::WriteAllText($setFile, $setJson, [System.Text.Encoding]::UTF8)
+                    }
+                    Send-JsonResponse $response @{ success = $true; message = "All website files updated successfully on disk!" }
+                } catch {
+                    Send-JsonResponse $response @{ success = $false; error = $_.Exception.Message } 500
+                }
+                continue
+            }
+
             if ($localPath -eq "api/sync-github") {
                 try {
                     Set-Location $root
