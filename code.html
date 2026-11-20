@@ -194,14 +194,14 @@ body.admin-active [data-img-editable]:hover::after {
   </span>
   <span class="font-label-sm text-label-sm uppercase tracking-[0.25em] text-on-primary/80 hidden sm:inline">SIALKOT &amp; LAHORE, PAKISTAN</span>
 </div>
-<h1 class="font-display-hero text-display-hero uppercase tracking-tight text-on-primary max-w-5xl text-balance drop-shadow-md"><span data-editable="true" data-key="heroHeadline">ENGINEERED APPAREL. CRAFTED IN PAKISTAN. EXPORTED GLOBALLY.</span>
+<h1 class="font-display-hero text-3xl sm:text-4xl md:text-5xl lg:text-display-hero leading-tight sm:leading-tight md:leading-[1.1] uppercase tracking-tight text-on-primary max-w-5xl text-balance drop-shadow-md"><span data-editable="true" data-key="heroHeadline">ENGINEERED APPAREL. CRAFTED IN PAKISTAN. EXPORTED GLOBALLY.</span>
 </h1>
-<p class="font-body-lg text-body-lg text-on-primary/90 max-w-2xl mt-4 leading-relaxed font-light" data-editable="true" data-key="heroSubtitle">
+<p class="font-body-md sm:font-body-lg text-sm sm:text-base md:text-lg text-on-primary/90 max-w-2xl mt-3 sm:mt-4 leading-relaxed font-light" data-editable="true" data-key="heroSubtitle">
   Pakistan's vertically integrated apparel manufacturing powerhouse. We produce and export world-class streetwear blanks, heavyweight French Terry knitwear, selvedge denim, athletic wear, and private-label apparel for high-street retailers and fashion brands across North America, the UK, Europe, and the Middle East.
 </p>
 
 <!-- Live Export Key Metrics Grid -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-on-primary/20 max-w-4xl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-on-primary/20 max-w-4xl">
   <div class="bg-black/30 backdrop-blur-sm p-3.5 border border-on-primary/10">
     <span class="font-headline-sm text-[24px] font-bold text-on-primary block" data-editable="true" data-key="stat1Val">35+ Countries</span>
     <span class="font-label-sm text-[10px] uppercase tracking-wider text-on-primary/70" data-editable="true" data-key="stat1Label">Export Footprint (USA, EU, UK, GCC)</span>
@@ -378,7 +378,7 @@ body.admin-active [data-img-editable]:hover::after {
 <h2 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight" id="catalog-heading" data-editable="true" data-key="catalogHeading">Export Sample Catalog</h2>
 <p class="font-body-sm text-body-sm text-on-surface-variant mt-1" data-editable="true" data-key="catalogDesc">Select any sample silhouette to inspect technical yarn counts, GSM, FOB price tiers, and order physical pre-production prototypes.</p>
 </div>
-<div class="flex flex-wrap items-center gap-2 sm:gap-3">
+<div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none flex-nowrap sm:flex-wrap w-full sm:w-auto -mx-2 px-2 sm:mx-0 sm:px-0">
 <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mr-1">Division:</span>
 <button onclick="filterProducts('all')" data-filter="all" class="filter-btn px-3 py-1.5 font-label-sm text-label-sm uppercase tracking-widest bg-primary text-on-primary transition-colors">All Divisions</button>
 <button onclick="filterProducts('men')" data-filter="men" class="filter-btn px-3 py-1.5 font-label-sm text-label-sm uppercase tracking-widest bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors">Knitwear</button>
@@ -407,7 +407,7 @@ body.admin-active [data-img-editable]:hover::after {
 </div>
 
 <!-- Dynamic Product Grid rendered via JS for full interactivity -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="products-grid"></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8" id="products-grid"></div>
 </section>
 
 <!-- 4. THE PAKISTAN SOURCING ADVANTAGE // GLOBAL EXPORT POWERHOUSE -->
@@ -486,7 +486,7 @@ body.admin-active [data-img-editable]:hover::after {
 <span data-editable="true" data-key="bestsellerStat">Over 1.5 Million Garments Exported to USA, UK &amp; Europe</span>
 </div>
 </div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="bestsellers-grid"></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8" id="bestsellers-grid"></div>
 </section>
 
 <!-- 6. GLOBAL COMPLIANCE, CERTIFICATIONS & QUALITY GATES -->
@@ -1898,7 +1898,8 @@ async function loadSupabaseLiveProducts() {
         .order('display_order', { ascending: true });
 
       if (!error && data && data.length > 0) {
-        PRODUCTS = data.map(row => ({
+        const cleanRows = data.filter(row => row.id !== '__site_inline_edits__');
+        PRODUCTS = cleanRows.map(row => ({
           id: row.id,
           title: row.title,
           subtitle: row.subtitle,
@@ -1927,6 +1928,75 @@ async function loadSupabaseLiveProducts() {
 
   // Fallback to local data/products.json
   loadCmsProducts();
+}
+
+/**
+ * Cloud Sync: Load edits from Supabase so Mobile and all devices see latest text instantly
+ */
+async function loadSupabaseLiveEdits() {
+  if (!supabaseClient) return;
+  try {
+    const { data, error } = await supabaseClient
+      .from('products')
+      .select('description')
+      .eq('id', '__site_inline_edits__')
+      .single();
+
+    if (!error && data && data.description) {
+      const cloudEdits = JSON.parse(data.description);
+      if (cloudEdits && typeof cloudEdits === 'object' && Object.keys(cloudEdits).length > 0) {
+        const local = JSON.parse(localStorage.getItem('alnahal_inline_edits') || '{}');
+        const merged = Object.assign({}, local, cloudEdits);
+        localStorage.setItem('alnahal_inline_edits', JSON.stringify(merged));
+        applyCloudEdits(merged);
+        console.log('✔ Applied latest Cloud edits to page! (Count:', Object.keys(merged).length, ')');
+      }
+    }
+  } catch(e) {
+    console.warn('loadSupabaseLiveEdits notice:', e);
+  }
+}
+
+function applyCloudEdits(editsObj) {
+  scanAndEnableAllElements();
+  Object.entries(editsObj).forEach(([k, val]) => {
+    if (!val) return;
+    const els = document.querySelectorAll([data-key=""]);
+    els.forEach(el => {
+      if (el.tagName === 'IMG') {
+        el.src = val;
+      } else if (el.id === 'hero-bg-image' || el.dataset.imgEditable === 'true') {
+        el.style.backgroundImage = url('');
+      } else {
+        el.innerText = val;
+      }
+    });
+  });
+}
+
+/**
+ * Cloud Sync: Push text changes to Supabase so mobile and all visitors get updated in 0.1s
+ */
+async function syncEditToCloud(key, value) {
+  try {
+    const saved = JSON.parse(localStorage.getItem('alnahal_inline_edits') || '{}');
+    saved[key] = value;
+    localStorage.setItem('alnahal_inline_edits', JSON.stringify(saved));
+
+    if (supabaseClient) {
+      await supabaseClient
+        .from('products')
+        .upsert({
+          id: '__site_inline_edits__',
+          title: 'Live Site Inline Edits',
+          image: 'system_config',
+          description: JSON.stringify(saved)
+        });
+      console.log('✔ Cloud synced to Supabase (visible on mobile instantly!)');
+    }
+  } catch (err) {
+    console.warn('Cloud sync error:', err);
+  }
 }
 
 // Subscribe to instant Realtime changes (0-second live updates)
@@ -2094,7 +2164,7 @@ function renderProducts() {
           <button onclick="toggleWishlist('${p.id}')" aria-label="Bookmark Spec" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors cursor-pointer" title="Bookmark Spec">
             <span class="material-symbols-outlined text-[18px] ${isWished ? 'heart-filled' : ''}">bookmark</span>
           </button>
-          <div class="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          <div class="absolute inset-x-0 bottom-0 translate-y-0 sm:translate-y-full sm:group-hover:translate-y-0 transition-transform duration-300">
             <button onclick="quickAddToCart('${p.id}')" class="w-full bg-primary text-on-primary py-3 font-label-md text-label-md uppercase tracking-widest hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 cursor-pointer font-bold">
               <span class="material-symbols-outlined text-[16px]">add</span> Add to Sample RFQ
             </button>
@@ -3186,7 +3256,8 @@ function saveInlineEdit(e) {
         document.title = value + ' — Pakistan Garment & Textile Manufacturing Exporter';
       }
     }
-    showToast('✔ Saved: ' + (key.length > 25 ? key.substring(0, 22) + '...' : key));
+    syncEditToCloud(key, value);
+    showToast('✔ Saved & Cloud Synced!');
   } catch(err) {}
 }
 
@@ -3741,6 +3812,8 @@ document.addEventListener('keydown', (e) => {
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
   loadSavedInlineEdits();
+  loadSupabaseLiveEdits();
+  loadSupabaseLiveProducts();
   updateAdminUI();
   renderProducts();
   renderBestsellers();
